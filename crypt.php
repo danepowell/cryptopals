@@ -28,7 +28,6 @@ pp_text($possibles[0]);
 **/
 
 // CHALLENGE 4
-// TODO use array_pop or something to shorten this
 
 $ciphers = file('4.txt');
 $possibles = array();
@@ -84,6 +83,7 @@ function dumb_score($text) {
  * Smart score based on character frequency.
  */
 function smart_score($text) {
+  // Quickly rule out non-standard characters.
   if (!preg_match('/^[\w\s"\']+$/', $text)) {
     return 1;
   }
