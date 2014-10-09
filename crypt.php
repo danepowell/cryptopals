@@ -2,41 +2,6 @@
 // TODO
 // Add tests
 // Profile and speed up
-// Separate challenges and function library
-
-// CHALLENGE 1
-/**
-$hex = '49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d';
-print(hex2b64($hex));
-**/
-
-// CHALLENGE 2
-/**
-$str1 = '1c0111001f010100061a024b53535009181c';
-$str2 = '686974207468652062756c6c277320657965';
-print(bin2hex(fxor(hex2bin($str1), hex2bin($str2))));
-**/
-
-// CHALLENGE 3
-/**
-$hex = '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736';
-$bin = hex2bin($hex);
-$possibles = brute_force($bin);
-usort($possibles, 'sort_by_score');
-$possibles = array_reverse($possibles);
-pp_text($possibles[0]);
-**/
-
-// CHALLENGE 4
-
-$ciphers = file('4.txt');
-$possibles = array();
-foreach ($ciphers as $cipher) {
-  $cipher = trim($cipher);
-  $possibles = array_merge($possibles, brute_force(hex2bin($cipher)));
-}
-usort($possibles, 'sort_by_score');
-pp_text(array_pop($possibles));
 
 /**
  * Pretty print possible plain text.
@@ -48,24 +13,16 @@ function pp_text($possible) {
 /**
  * Brute force a ciphertext.
  */
-function brute_force($bin) {
-  $possibles = array();
-  $possibles = array_merge($possibles, brute_force_range($bin, 'A', 'Z'));
-  $possibles = array_merge($possibles, brute_force_range($bin, 'a', 'z'));
-  $possibles = array_merge($possibles, brute_force_range($bin, '0', '9'));
-  return $possibles;
-}
 
-function brute_force_range($bin, $r1, $r2) {
+function brute_force($cipher_text, $keys) {
   $possibles = array();
-  foreach (range($r1, $r2) as $char) {
+  foreach ($keys as $key) {
     $possible = array();
-    $key = array_fill(0, strlen($bin), $char);
-    $key = implode($key);
-    $text = fxor($bin, $key);
-    $possible['text'] = $text;
-    $possible['score'] = smart_score($text);
-    $possible['key'] = $char;
+    $key = str_pad("", strlen($cipher_text), $key);
+    $plain_text = fxor($cipher_text, $key);
+    $possible['text'] = $plain_text;
+    $possible['score'] = smart_score($plain_text);
+    $possible['key'] = $key;
     $possibles[] = $possible;
   }
   return $possibles;
