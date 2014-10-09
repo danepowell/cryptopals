@@ -1,10 +1,25 @@
 <?php
 
 /**
+ * Test results.
+ */
+function assert_equal($expected, $actual) {
+  print("\r\n");
+  if ($expected == $actual) {
+    print("PASS\r\n");
+  }
+  else {
+    print("FAIL\r\n");
+    print("Expected: " . $expected . "\r\n");
+    print("Actual: " . $actual . "\r\n");
+  }
+}
+
+/**
  * Pretty print possible plain text.
  */
 function pp_text($possible) {
-  print ($possible['score'] . ' ' . $possible['text'] . "\r\n");
+  print ($possible['score'] . ' ' . $possible['key'] . ' ' . $possible['text'] . "\r\n");
 }
 
 /**
