@@ -14,14 +14,21 @@ function brute_force($cipher_text, $keys) {
   $possibles = array();
   foreach ($keys as $key) {
     $possible = array();
-    $key = str_pad("", strlen($cipher_text), $key);
-    $plain_text = fxor($cipher_text, $key);
+    $plain_text = recrypt($cipher_text, $key);
     $possible['text'] = $plain_text;
     $possible['score'] = smart_score($plain_text);
     $possible['key'] = $key;
     $possibles[] = $possible;
   }
   return $possibles;
+}
+
+/**
+ * Encrypt or decrypt a string using repeating-key xor.
+ */
+function recrypt($text, $key) {
+  $key = str_pad("", strlen($text), $key);
+  return fxor($text, $key);
 }
 
 /**
