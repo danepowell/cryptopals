@@ -1,7 +1,4 @@
 <?php
-// TODO
-// Add tests
-// Profile and speed up
 
 /**
  * Pretty print possible plain text.
@@ -13,7 +10,6 @@ function pp_text($possible) {
 /**
  * Brute force a ciphertext.
  */
-
 function brute_force($cipher_text, $keys) {
   $possibles = array();
   foreach ($keys as $key) {
