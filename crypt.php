@@ -1,6 +1,51 @@
 <?php
 
 /**
+ * Guess keysizes.
+ */
+function brute_keysize($cipher_text, $key_sizes, $n) {
+  $distances = array();
+  foreach ($key_sizes as $key_size) {
+    $str1 = substr($cipher_text, 0, $key_size);
+    $str2 = substr($cipher_text, $key_size, $key_size);
+    $distance = hamming(str2bin($str1), str2bin($str2));
+    $norm_distance = $distance / $key_size;
+    $distances[] = array("key_size" => $key_size, "distance" => $norm_distance);
+  }
+
+  usort($distances, 'sort_by_distance');
+  $distances = array_reverse($distances);
+
+  $key_sizes = array();
+
+  for ($i=0; $i < $n; $i++) {
+    $key_sizes[] = $distances[$i]['key_size'];
+  }
+  return $key_sizes;
+}
+
+/**
+ * Compute hamming distance between two strings.
+ */
+function hamming($str1, $str2) {
+  $arr1 = str_split($str1);
+  $arr2 = str_split($str2);
+  return count(array_diff_assoc($arr1, $arr2));
+}
+
+/**
+ * Converts string to binary equivalent.
+ */
+function str2bin($str) {
+  $bin = "";
+  $arr = str_split($str);
+  foreach ($arr as $char) {
+    $bin .= sprintf("%08d", decbin(ord($char)));
+  }
+  return $bin;
+}
+
+/**
  * Test results.
  */
 function assert_equal($expected, $actual) {
@@ -95,7 +140,22 @@ function fxor($str1, $str2) {
  * Helper function to sort array by score.
  */
 function sort_by_score($a, $b) {
-  $diff = $b['score'] - $a['score'];
+  return sort_array_by_value($a, $b, 'score');
+}
+
+/**
+ * Helper function to sort array by distance.
+ */
+function sort_by_distance($a, $b) {
+  return sort_array_by_value($a, $b, 'distance');
+}
+
+/**
+ * Sort arrays by value.
+ * TODO allow asc/desc sort.
+ */
+function sort_array_by_value($a, $b, $key) {
+  $diff = $b[$key] - $a[$key];
   if ($diff < 0) {
     return -1;
   }
