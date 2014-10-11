@@ -16,25 +16,35 @@ assert_equal(37, $distance);
 $cipher_b64 = file_get_contents('6.txt');
 $cipher_text = base64_decode($cipher_b64);
 
-$key_sizes = range(2,40);
-$key_sizes = brute_keysize($cipher_text, $key_sizes, 4);
+$key_sizes = range(2,50);
 
+// PROBABLY NOT GETTING THE RIGHT KEYSIZE HERE...
+$key_sizes = brute_keysize($cipher_text, $key_sizes, 5);
+print("Probable keysizes: " . implode(', ', $key_sizes));
+echo "\r\n";
+
+$key_chars = array_map('chr', range(33, 126));
 foreach ($key_sizes as $key_size) {
-  $cipher_arr = str_split($cipher_text, $key_size);
+  $blocks = str_split($cipher_text, $key_size);
 
-  $blocks = array();
+  $t_blocks = array();
   for ($i = 0; $i < $key_size; $i++) {
-    $blocks[$i] = "";
-    foreach ($cipher_arr as $block) {
-      $blocks[$i] .= substr($block, $i, 1);
+    $t_block = "";
+    foreach ($blocks as $block) {
+      $t_block .= substr($block, $i, 1);
     }
+    $t_blocks[$i] = $t_block;
   }
 
-  $keys = array_merge(range('a', 'z'), range('A', 'Z'), range(0, 9));
-  foreach ($blocks as $cipher_str) {
-    $possibles = brute_force($cipher_str, $keys);
-    usort($possibles, 'sort_by_score');
-    $candidate = array_pop($possibles);
-    pp_text($candidate);
+  $key = "";
+  foreach ($t_blocks as $cipher_str) {
+    $candidates = brute_force($cipher_str, $key_chars);
+    usort($candidates, 'sort_by_score');
+    $candidate = array_pop($candidates);
+    $key .= $candidate['key'];
   }
+  echo $key;
+  echo "\r\n";
+  echo recrypt(substr($cipher_text, 0, 10), $key);
+  echo "\r\n";
 }

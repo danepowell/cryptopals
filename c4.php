@@ -3,7 +3,8 @@ include 'crypt.php';
 
 $cipher_hexes = file('4.txt');
 
-$keys = array_merge(range('a', 'z'), range('A', 'Z'), range(0, 9));
+//$keys = array_merge(range('a', 'z'), range('A', 'Z'), range(0, 9));
+$keys = range(33,126);
 $possibles = array();
 foreach ($cipher_hexes as $cipher_hex) {
   $cipher_text = hex2bin(trim($cipher_hex));

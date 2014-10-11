@@ -103,10 +103,6 @@ function dumb_score($text) {
  * Smart score based on character frequency.
  */
 function smart_score($text) {
-  // Quickly rule out non-standard characters.
-  if (!preg_match('/^[\w\s"\']+$/', $text)) {
-    return 1;
-  }
   $text = strtolower($text);
   $frequencies = letter_frequency();
   $ss = 0.0;
@@ -115,6 +111,9 @@ function smart_score($text) {
     $actual = substr_count($text, $letter) / $length;
     $ss += pow($actual - $frequency, 2);
   }
+/**  if (!preg_match('/^[\w\s"\']+$/', $text)) {
+    $ss = $ss * 10;
+    }**/
   return $ss;
 }
 
