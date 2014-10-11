@@ -6,11 +6,20 @@
 function brute_keysize($cipher_text, $key_sizes, $n) {
   $distances = array();
   foreach ($key_sizes as $key_size) {
-    $str1 = substr($cipher_text, 0, $key_size);
-    $str2 = substr($cipher_text, $key_size, $key_size);
-    $distance = hamming(str2bin($str1), str2bin($str2));
-    $norm_distance = $distance / $key_size;
-    $distances[] = array("key_size" => $key_size, "distance" => $norm_distance);
+    $blocks = array();
+    for ($i = 0; $i < 4; $i++) {
+      $blocks[$i] = substr($cipher_text, $i * $key_size, $key_size);
+    }
+    $norm_distances = array();
+    for ($i = 0; $i < 4; $i++) {
+      for ($j = 0; $j < $i; $j++) {
+        if ($i != $j) {
+          $norm_distances[] = hamming(str2bin($blocks[$i]), str2bin($blocks[$j])) / $key_size;
+        }
+      }
+    }
+    $distance = array_sum( $norm_distances) / count($norm_distances);
+    $distances[] = array("key_size" => $key_size, "distance" => $distance);
   }
 
   usort($distances, 'sort_by_distance');

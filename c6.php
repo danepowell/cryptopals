@@ -18,12 +18,11 @@ $cipher_text = base64_decode($cipher_b64);
 
 $key_sizes = range(2,50);
 
-// PROBABLY NOT GETTING THE RIGHT KEYSIZE HERE...
-$key_sizes = brute_keysize($cipher_text, $key_sizes, 5);
+$key_sizes = brute_keysize($cipher_text, $key_sizes, 1);
 print("Probable keysizes: " . implode(', ', $key_sizes));
 echo "\r\n";
 
-$key_chars = array_map('chr', range(33, 126));
+$key_chars = array_map('chr', range(32, 126));
 foreach ($key_sizes as $key_size) {
   $blocks = str_split($cipher_text, $key_size);
 
@@ -45,6 +44,8 @@ foreach ($key_sizes as $key_size) {
   }
   echo $key;
   echo "\r\n";
-  echo recrypt(substr($cipher_text, 0, 10), $key);
+  echo recrypt($cipher_text, $key);
   echo "\r\n";
+
+  assert_equal("Terminator X: Bring the noise", $key);
 }
