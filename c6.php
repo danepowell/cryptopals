@@ -9,7 +9,7 @@ $test_bin1 = str2bin($test_str1);
 $test_bin2 = str2bin($test_str2);
 
 $distance = hamming($test_bin1, $test_bin2);
-echo $distance;
+echo "Testing Hamming distance", $distance;
 assert_equal(37, $distance);
 
 // PART 2: Decrypt file.
@@ -19,10 +19,10 @@ $cipher_text = base64_decode($cipher_b64);
 $key_sizes = range(2,50);
 
 $key_sizes = brute_keysize($cipher_text, $key_sizes, 1);
-print("Probable keysizes: " . implode(', ', $key_sizes));
-echo "\r\n";
+echo "Probable keysizes: ", implode(', ', $key_sizes), PHP_EOL;
 
-$key_chars = array_map('chr', range(32, 126));
+assert_equal(29, $key_sizes[0]);
+$key_chars = english_chars();
 foreach ($key_sizes as $key_size) {
   $blocks = str_split($cipher_text, $key_size);
 
@@ -37,15 +37,11 @@ foreach ($key_sizes as $key_size) {
 
   $key = "";
   foreach ($t_blocks as $cipher_str) {
-    $candidates = brute_force($cipher_str, $key_chars);
-    usort($candidates, 'sort_by_score');
-    $candidate = array_pop($candidates);
+    $candidate = brute_force($cipher_str, $key_chars);
     $key .= $candidate['key'];
   }
-  echo $key;
-  echo "\r\n";
-  echo recrypt($cipher_text, $key);
-  echo "\r\n";
+  echo $key, PHP_EOL;
+  echo recrypt($cipher_text, $key), PHP_EOL;
 
   assert_equal("Terminator X: Bring the noise", $key);
 }

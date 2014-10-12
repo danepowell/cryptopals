@@ -18,12 +18,11 @@ function brute_keysize($cipher_text, $key_sizes, $n) {
         }
       }
     }
-    $distance = array_sum( $norm_distances) / count($norm_distances);
+    $distance = array_sum($norm_distances) / count($norm_distances);
     $distances[] = array("key_size" => $key_size, "distance" => $distance);
   }
 
   usort($distances, 'sort_by_distance');
-  $distances = array_reverse($distances);
 
   $key_sizes = array();
 
@@ -89,7 +88,8 @@ function brute_force($cipher_text, $keys) {
     $possible['key'] = $key;
     $possibles[] = $possible;
   }
-  return $possibles;
+  usort($possibles, 'sort_by_score');
+  return $possibles[0];
 }
 
 /**
@@ -120,9 +120,6 @@ function smart_score($text) {
     $actual = substr_count($text, $letter) / $length;
     $ss += pow($actual - $frequency, 2);
   }
-/**  if (!preg_match('/^[\w\s"\']+$/', $text)) {
-    $ss = $ss * 10;
-    }**/
   return $ss;
 }
 
@@ -160,10 +157,10 @@ function sort_by_distance($a, $b) {
 
 /**
  * Sort arrays by value.
- * TODO allow asc/desc sort.
  */
 function sort_array_by_value($a, $b, $key) {
-  $diff = $b[$key] - $a[$key];
+  $diff = $a[$key] - $b[$key];
+
   if ($diff < 0) {
     return -1;
   }
@@ -208,4 +205,11 @@ function letter_frequency() {
     'z' => 0.00074,
     ' ' => 0.21,
   );
+}
+
+/**
+ * @return array of english characters.
+ */
+function english_chars() {
+  return array_map('chr', range(32, 126));
 }

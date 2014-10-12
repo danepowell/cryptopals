@@ -4,10 +4,8 @@ include 'crypt.php';
 $cipher_hex = '1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736';
 
 $cipher_text = hex2bin($cipher_hex);
-$keys = array_merge(range('a', 'z'), range('A', 'Z'), range(0, 9));
-$possibles = brute_force($cipher_text, $keys);
-usort($possibles, 'sort_by_score');
-$possibles = array_reverse($possibles);
+$keys = english_chars();
+$plain_text = brute_force($cipher_text, $keys);
 
-pp_text($possibles[0]);
-assert_equal('X', $possibles[0]['key']);
+pp_text($plain_text);
+assert_equal('X', $plain_text['key']);
