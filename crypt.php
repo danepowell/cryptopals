@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * Pad string using pkcs7
+ */
+function pad_pkcs7($plain_text, $pad_length) {
+  return str_pad($plain_text, $pad_length, "\x04");
+}
+
+/**
  * Guess keysizes.
  */
 function brute_keysize($cipher_text, $key_sizes, $n) {
