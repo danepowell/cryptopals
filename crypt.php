@@ -1,6 +1,51 @@
 <?php
 
 /**
+ * Encrypts data under a random key.
+ */
+function encryption_oracle($plain_text) {
+  $key = random_aes_key();
+  return ecb_encrypt($plain_text, $key);
+}
+
+/**
+ * Returns a random AES key.
+ */
+function random_aes_key() {
+  return openssl_random_pseudo_bytes(16);
+}
+
+function cbc_encrypt($plain_text, $key, $iv) {
+  $block_size = strlen($key);
+  $last_block_text = $iv;
+  $cipher_text = "";
+  for ($i = 0; $i < strlen($plain_text); $i = $i + $block_size) {
+    $block_text = substr($plain_text, $i, $block_size);
+    $intermediate = fxor($block_text, $last_block_text);
+    $cipher_block = ecb_encrypt($intermediate, $key);
+    $last_block_text = $cipher_block;
+    $cipher_text .= $cipher_block;
+  }
+  return $cipher_text;
+}
+
+/**
+ * Decrypt string using CBC.
+ */
+function cbc_decrypt($cipher_text, $key, $iv) {
+  $block_size = strlen($key);
+  $last_block_text = $iv;
+  $plain_text = "";
+  for ($i = 0; $i < strlen($cipher_text); $i = $i + $block_size) {
+    $block_text = substr($cipher_text, $i, $block_size);
+    $intermediate = ecb_decrypt($block_text, $key);
+    $plain_text .= fxor($intermediate, $last_block_text);
+    $last_block_text = $block_text;
+  }
+  return $plain_text;
+}
+
+/**
  * Decrypt string using openssl ECB mode.
  *
  * Cipher text and key must be binary strings.

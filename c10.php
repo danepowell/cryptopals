@@ -7,11 +7,6 @@ $key = 'YELLOW SUBMARINE';
 $block_size = strlen($key);
 $iv = str_pad("", $block_size, "\x00");
 
-$last_block_text = $iv;
-for ($i = 0; $i < strlen($cipher_text); $i = $i + $block_size) {
-  $block_text = substr($cipher_text, $i, $block_size);
-  $intermediate = ecb_decrypt($block_text, $key);
-  $plain_text = fxor($intermediate, $last_block_text);
-  $last_block_text = $block_text;
-  echo $plain_text;
-}
+$plain_text = cbc_decrypt($cipher_text, $key, $iv);
+
+assert_equal("I'm back and I'm ringin' the bell ", explode("\n", $plain_text)[0]);
