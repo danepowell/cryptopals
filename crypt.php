@@ -5,7 +5,17 @@
  */
 function encryption_oracle($plain_text) {
   $key = random_aes_key();
-  return ecb_encrypt($plain_text, $key);
+  $pre_byte_count = rand(5,10);
+  $post_byte_count = rand(5,10);
+  $plain_text = openssl_random_pseudo_bytes($pre_byte_count) . $plain_text;
+  $plain_text .= openssl_random_pseudo_bytes($post_byte_count);
+  if ((bool)rand(0,1)) {
+    return ecb_encrypt($plain_text, $key);
+  }
+  else {
+    $iv = random_aes_key();
+    return cbc_encrypt($plain_text, $key, $iv);
+  }
 }
 
 /**
@@ -62,6 +72,10 @@ function ecb_decrypt($cipher_text, $key) {
  * Encrypt string using openssl ECB mode.
  */
 function ecb_encrypt($plain_text, $key) {
+  if (strlen($plain_text) % strlen($key) != 0) {
+    echo 'Cipher length must be even multiple of key length.';
+    return FALSE;
+  }
   return openssl_encrypt($plain_text, 'AES-128-ECB', $key, OPENSSL_RAW_DATA+OPENSSL_ZERO_PADDING);
 }
 
