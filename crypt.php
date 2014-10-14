@@ -1,6 +1,20 @@
 <?php
 
 /**
+ * Decrypt string using openssl ECB mode.
+ */
+function ecb_decrypt($cipher_text, $key) {
+  return openssl_decrypt($cipher_text, 'AES-128-ECB', $key);
+}
+
+/**
+ * Encrypt string using openssl ECB mode.
+ */
+function ecb_encrypt($plain_text, $key) {
+  return openssl_encrypt($plain_text, 'AES-128-ECB', $key);
+}
+
+/**
  * Pad string using pkcs7
  */
 function pad_pkcs7($plain_text, $pad_length) {
