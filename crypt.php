@@ -2,16 +2,22 @@
 
 /**
  * Decrypt string using openssl ECB mode.
+ *
+ * Cipher text and key must be binary strings.
  */
 function ecb_decrypt($cipher_text, $key) {
-  return openssl_decrypt($cipher_text, 'AES-128-ECB', $key);
+  if (strlen($cipher_text) % strlen($key) != 0) {
+    echo 'Cipher length must be even multiple of key length.';
+    return FALSE;
+  }
+  return openssl_decrypt($cipher_text, 'AES-128-ECB', $key, OPENSSL_RAW_DATA+OPENSSL_ZERO_PADDING);
 }
 
 /**
  * Encrypt string using openssl ECB mode.
  */
 function ecb_encrypt($plain_text, $key) {
-  return openssl_encrypt($plain_text, 'AES-128-ECB', $key);
+  return openssl_encrypt($plain_text, 'AES-128-ECB', $key, OPENSSL_RAW_DATA+OPENSSL_ZERO_PADDING);
 }
 
 /**

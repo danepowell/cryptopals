@@ -2,7 +2,7 @@
 include 'crypt.php';
 
 $cipher_text = file_get_contents('7.txt');
-
+$cipher_text = base64_decode($cipher_text);
 $plain_text = ecb_decrypt($cipher_text, 'YELLOW SUBMARINE');
 
 echo $plain_text, PHP_EOL;
