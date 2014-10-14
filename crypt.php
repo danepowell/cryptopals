@@ -10,10 +10,12 @@ function encryption_oracle($plain_text) {
   $plain_text = openssl_random_pseudo_bytes($pre_byte_count) . $plain_text;
   $plain_text .= openssl_random_pseudo_bytes($post_byte_count);
   if ((bool)rand(0,1)) {
+    echo "ECB", "\r\n";
     return ecb_encrypt($plain_text, $key);
   }
   else {
     $iv = random_aes_key();
+    echo "CBC", "\r\n";
     return cbc_encrypt($plain_text, $key, $iv);
   }
 }
@@ -72,9 +74,12 @@ function ecb_decrypt($cipher_text, $key) {
  * Encrypt string using openssl ECB mode.
  */
 function ecb_encrypt($plain_text, $key) {
-  if (strlen($plain_text) % strlen($key) != 0) {
-    echo 'Cipher length must be even multiple of key length.';
-    return FALSE;
+  $block_length = strlen($key);
+  $text_length = strlen($plain_text);
+  $remainder = $text_length % $block_length;
+  $num_blocks = ceil($text_length / $block_length);
+  if ($remainder != 0) {
+    $plain_text = pad_pkcs7($plain_text, $num_blocks * $block_length);
   }
   return openssl_encrypt($plain_text, 'AES-128-ECB', $key, OPENSSL_RAW_DATA+OPENSSL_ZERO_PADDING);
 }

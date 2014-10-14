@@ -1,4 +1,4 @@
 <?php
 include 'crypt.php';
 
-echo encryption_oracle("1234567890123456");
+echo encryption_oracle("1234567890123456"), "\r\n";
