@@ -5,9 +5,7 @@ $cipher_hexes = file('8.txt', FILE_IGNORE_NEW_LINES);
 
 $aes_ciphers = array();
 foreach ($cipher_hexes as $cipher_hex) {
-  $blocks = str_split($cipher_hex, 16);
-  $unique_blocks = array_unique($blocks);
-  if (count($blocks) != count($unique_blocks)) {
+  if (detect_dupe($cipher_hex)) {
     $aes_ciphers[] = $cipher_hex;
   }
 }

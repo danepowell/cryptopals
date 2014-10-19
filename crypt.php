@@ -1,5 +1,14 @@
 <?php
 
+function detect_dupe($cipher_text) {
+  $blocks = str_split($cipher_text, 16);
+  $unique_blocks = array_unique($blocks);
+  if (count($blocks) != count($unique_blocks)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
 /**
  * Encrypts data under a random key.
  */
@@ -10,14 +19,15 @@ function encryption_oracle($plain_text) {
   $plain_text = openssl_random_pseudo_bytes($pre_byte_count) . $plain_text;
   $plain_text .= openssl_random_pseudo_bytes($post_byte_count);
   if ((bool)rand(0,1)) {
-    echo "ECB", "\r\n";
-    return ecb_encrypt($plain_text, $key);
+    $mode = 'ECB';
+    $cipher_text = ecb_encrypt($plain_text, $key);
   }
   else {
     $iv = random_aes_key();
-    echo "CBC", "\r\n";
-    return cbc_encrypt($plain_text, $key, $iv);
+    $mode = 'CBC';
+    $cipher_text = cbc_encrypt($plain_text, $key, $iv);
   }
+  return array('mode' => $mode, 'cipher_text' => $cipher_text);
 }
 
 /**
