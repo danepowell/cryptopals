@@ -1,7 +1,7 @@
 <?php
 include 'crypt.php';
 
-$cipher_hexes = file('4.txt', FILE_IGNORE_NEW_LINES);
+$cipher_hexes = file('../resources/4.txt', FILE_IGNORE_NEW_LINES);
 
 $keys = english_chars();
 $possibles = array();

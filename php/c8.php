@@ -1,7 +1,7 @@
 <?php
 include 'crypt.php';
 
-$cipher_hexes = file('8.txt', FILE_IGNORE_NEW_LINES);
+$cipher_hexes = file('../resources/8.txt', FILE_IGNORE_NEW_LINES);
 
 $aes_ciphers = array();
 foreach ($cipher_hexes as $cipher_hex) {
