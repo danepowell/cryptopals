@@ -9,6 +9,16 @@ def fxor(str1, str2):
         arr1[i] ^= arr2[i]
     return arr1.tostring()
 
+def str_pad(str1, length):
+    repeats = (length // len(str1)) + 1
+    str1 *= repeats
+    return str1[:length]
+
+# Repeating key XOR: takes a string and repeating key and produces XOR combination.
+def rxor(str1, key):
+    key = str_pad(key, len(str1))
+    return fxor(str1, key)
+
 # Guesses 1-byte XOR key for string.
 def guess_1byte_xor(str1):
     str_len = len(str1)
