@@ -38,5 +38,17 @@ class CryptoTest(unittest.TestCase):
         cipher = crypt.rxor(plain_text, key)
         self.assertEqual('0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f', cipher.encode('hex'))
 
+    def test_challenge_6(self):
+        str1 = 'this is a test'
+        str2 = 'wokka wokka!!!'
+        distance = crypt.hamming(str1, str2)
+        self.assertEqual(distance, 37)
+
+        cipher_lines = [line.rstrip('\n') for line in open('../resources/6.txt')]
+        cipher_str = ''.join(cipher_lines)
+        cipher_str = cipher_str.decode('base64')
+        keysize = crypt.rxor_keysize(cipher_str)
+        self.assertEqual(keysize, 29)
+
 if __name__ == '__main__':
     unittest.main()

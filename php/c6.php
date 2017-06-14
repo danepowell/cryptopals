@@ -13,7 +13,7 @@ echo "Testing Hamming distance", $distance;
 assert_equal(37, $distance);
 
 // PART 2: Decrypt file.
-$cipher_b64 = file_get_contents('6.txt');
+$cipher_b64 = file_get_contents('../resources/6.txt');
 $cipher_text = base64_decode($cipher_b64);
 
 $key_sizes = range(2,50);
