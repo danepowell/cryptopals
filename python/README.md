@@ -1,2 +1,2 @@
-Run tests: `python crypt.py`
+Run tests: `python test_crypt.py`
 
