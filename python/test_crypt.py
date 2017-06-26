@@ -1,6 +1,8 @@
 import unittest
 import array
 import crypt
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.backends import default_backend
 
 class CryptoTest(unittest.TestCase):
 
@@ -50,5 +52,19 @@ class CryptoTest(unittest.TestCase):
         keysize = crypt.rxor_keysize(cipher_str)
         self.assertEqual(keysize, 29)
 
+        key = crypt.rxor_crack(cipher_str, keysize)
+        self.assertEqual(key, 'Terminator X: Bring the noise')
+
+    def test_challenge_7(self):
+        cipher_lines = [line.rstrip('\n') for line in open('../resources/7.txt')]
+        cipher_str = ''.join(cipher_lines)
+        cipher_str = cipher_str.decode('base64')
+
+        backend = default_backend()
+        cipher = Cipher(algorithms.AES("YELLOW SUBMARINE"), modes.ECB(), backend=backend)
+        decryptor = cipher.decryptor()
+        plain_str = decryptor.update(cipher_str) + decryptor.finalize()
+        self.assertEqual(plain_str[:8], "I'm back")
+        
 if __name__ == '__main__':
     unittest.main()

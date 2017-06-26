@@ -81,3 +81,17 @@ def rxor_keysize(str1):
                     distance += hamming(blocks[i], blocks[j])
         keysizes[keysize] = distance / float(keysize)
     return min(keysizes, key=keysizes.get)
+
+# Crack rxor
+def rxor_crack(str1, keysize):
+    blocks = [ str1[keysize*i:keysize*(i+1)] for i in range(len(str1)/keysize)]
+    tblocks = {}
+    for i in range(keysize):
+        keyblock = ''
+        for j in range(len(blocks)):
+            keyblock = keyblock + blocks[j][i]
+        tblocks[i] = keyblock
+    key = ''
+    for i in range(keysize):
+        key = key + guess_1byte_xor(tblocks[i])['key']
+    return key
