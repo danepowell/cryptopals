@@ -65,6 +65,15 @@ class CryptoTest(unittest.TestCase):
         decryptor = cipher.decryptor()
         plain_str = decryptor.update(cipher_str) + decryptor.finalize()
         self.assertEqual(plain_str[:8], "I'm back")
-        
+
+    def test_challenge_8(self):
+        cipher_lines = [line.rstrip('\n').decode('hex') for line in open('../resources/8.txt')]
+        dupes = 0;
+        for line in cipher_lines:
+            blocks = [line[x:x + 16] for x in range(0, len(line), 16)]
+            if len(blocks) != len(set(blocks)):
+                dupes += 1
+        self.assertEqual(dupes, 1);
+
 if __name__ == '__main__':
     unittest.main()
