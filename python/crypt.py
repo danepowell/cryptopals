@@ -9,14 +9,16 @@ def fxor(str1, str2):
         arr1[i] ^= arr2[i]
     return arr1.tostring()
 
-def str_pad(str1, length):
-    repeats = (length // len(str1)) + 1
-    str1 *= repeats
+# Take a string str1 and pad with chars to length.
+def str_pad(str1, length, chars):
+    repeats = (length // len(chars)) + 1
+    pad = chars*repeats
+    str1 += pad
     return str1[:length]
 
 # Repeating key XOR: takes a string and repeating key and produces XOR combination.
 def rxor(str1, key):
-    key = str_pad(key, len(str1))
+    key = str_pad(key, len(str1), key)
     return fxor(str1, key)
 
 # Guesses 1-byte XOR key for string.
@@ -95,3 +97,6 @@ def rxor_crack(str1, keysize):
     for i in range(keysize):
         key = key + guess_1byte_xor(tblocks[i])['key']
     return key
+
+def pad_pkcs7(str1, length):
+    return str_pad(str1, length, "\x04")

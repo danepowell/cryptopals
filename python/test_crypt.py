@@ -75,5 +75,10 @@ class CryptoTest(unittest.TestCase):
                 dupes += 1
         self.assertEqual(dupes, 1);
 
+    def test_challenge_9(self):
+        plain_str = "YELLOW SUBMARINE"
+        padded_str = crypt.pad_pkcs7(plain_str, 20)
+        self.assertEqual(padded_str, "YELLOW SUBMARINE\x04\x04\x04\x04")
+
 if __name__ == '__main__':
     unittest.main()
