@@ -1,0 +1,26 @@
+{
+  "name": "danepowell/cryptopals",
+  "type": "library",
+  "description": "Cryptopals solutions",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Dane Powell",
+      "email": "git@danepowell.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Danepowell\\Cryptopals\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Danepowell\\Cryptopals\\": "tests/"
+    }
+  },
+  "require": {
+    "phpunit/phpunit": "^8.3"
+  }
+}
